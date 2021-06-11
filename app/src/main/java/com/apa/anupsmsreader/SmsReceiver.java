@@ -19,6 +19,8 @@ import java.util.Date;
 public class SmsReceiver extends BroadcastReceiver {
 
     private  static TextView textView;
+    //private static String usage = "Papa";
+    private static String usage = "Jiju";
     private static String jijuPhone = "9821077656";
     private static String pradnyaPhone = "8369553630";
     private static String anupPhone = "9766518255";
@@ -32,11 +34,13 @@ public class SmsReceiver extends BroadcastReceiver {
             String messageBody = msg.getMessageBody();
             Log.w("ANUP-SMS","Message Received : " + messageBody);
             try {
-                if(messageBody.contains("CDSL-Please use OTP") ||
+                if(usage.equalsIgnoreCase("Jiju") && (messageBody.contains("CDSL-Please use OTP") ||
                         messageBody.contains("W1573") ||
-                        messageBody.contains("J77302")) {
-                    //sendSmsUsingSMSManager(messageBody, jijuPhone);
-                    sendSmsUsingSMSManager(messageBody, pradnyaPhone);
+                        messageBody.contains("J77302"))) {
+                    sendSmsUsingSMSManager(messageBody, jijuPhone);
+                    //sendSmsUsingSMSManager(messageBody, pradnyaPhone);
+                }else if(usage.equalsIgnoreCase("Papa") && (messageBody.contains("OTP"))){
+                    sendSmsUsingSMSManager(messageBody, anupPhone);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
