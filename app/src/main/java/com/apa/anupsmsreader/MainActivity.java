@@ -8,14 +8,19 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    TextView logView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        logView = (TextView) findViewById(R.id.log_text_view);
+        new SmsReceiver().setLog(logView);
         // read permission
         requestSMSPermissions();
     }
