@@ -24,6 +24,7 @@ public class SmsReceiver extends BroadcastReceiver {
     private static String jijuPhone = "9821077656";
     private static String pradnyaPhone = "8369553630";
     private static String anupPhone = "9766518255";
+    private static String papaPhone = "8390906135";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -37,29 +38,26 @@ public class SmsReceiver extends BroadcastReceiver {
                 if(usage.equalsIgnoreCase("Jiju") && (messageBody.contains("CDSL-Please use OTP") ||
                         messageBody.contains("W1573") ||
                         messageBody.contains("J77302"))) {
-                    sendSmsUsingSMSManager(messageBody, jijuPhone);
-                    //sendSmsUsingSMSManager(messageBody, pradnyaPhone);
-                }else if(usage.equalsIgnoreCase("Papa") && (messageBody.contains("OTP"))){
-                    sendSmsUsingSMSManager(messageBody, anupPhone);
+                    SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(1);
+                    sendSmsUsingSMSManager(messageBody, smsManager, jijuPhone);
+                    //sendSmsUsingSMSManager(messageBody, smsManager, pradnyaPhone);
+                }else if(usage.equalsIgnoreCase("Papa") && (messageBody.contains("OTP") || messageBody.contains("otp"))){
+                    SmsManager smsManager = SmsManager.getDefault();
+                    sendSmsUsingSMSManager(messageBody, smsManager, anupPhone);
+                    //sendSmsUsingSMSManager(messageBody, smsManager, pradnyaPhone);
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (Exception e) {
+                Log.w("ANUP-SMS-ERROR","Error in forwarding SMS : " + messageBody);
                 e.printStackTrace();
             }
             //sendSms(messageBody);
         }
     }
 
-    public void sendSmsUsingSMSManager(String messageBody, String phoneNo) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public void sendSmsUsingSMSManager(String messageBody, SmsManager smsManager, String phoneNo) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Date currentTime = Calendar.getInstance().getTime();
         messageBody += "\n FROM ANUP SMS MAGIC :)";
         messageBody =  messageBody.length() > 160 ? messageBody.substring(0,160) : messageBody;
-        SmsManager smsManager = SmsManager.getSmsManagerForSubscriptionId(1);
         smsManager.sendTextMessage(phoneNo, null, messageBody, null, null);
         textView.append("\n"+ currentTime+" Message Forwarded !!! to :" + phoneNo +" " + messageBody);
         Log.w("ANUP-SMS", "Message Forwarded !!!");
